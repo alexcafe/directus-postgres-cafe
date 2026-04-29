@@ -1,0 +1,10 @@
+feat: add RQH homepage and content creation guide
+
+- Complete RQH Tech Solutions homepage with 5 sections:
+  Header, Hero, Services, CTA Banner, Blog and Footer
+- Gradient orbs, glassmorphism header and animated hover states
+- NewsCard updated with optional category badge and flex layout
+- Badge and Separator shadcn components added
+- CONTENT_GUIDE.md: full editorial workflow documentation
+  covering Noticias, Paginas, Uploads, Global Settings,
+  API consumption patterns and frontend page conventions
