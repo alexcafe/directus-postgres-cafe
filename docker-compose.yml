@@ -1,0 +1,67 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: cms_postgres
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - cms-network
+
+  directus:
+    image: directus/directus:11.1
+    container_name: cms_directus
+    restart: unless-stopped
+    ports:
+      - "8055:8055"
+    depends_on:
+      - postgres
+    environment:
+      SECRET: ${DIRECTUS_SECRET}
+      DB_CLIENT: ${DB_CLIENT}
+      DB_HOST: ${DB_HOST}
+      DB_PORT: ${DB_PORT}
+      DB_DATABASE: ${DB_DATABASE}
+      DB_USER: ${DB_USER}
+      DB_PASSWORD: ${DB_PASSWORD}
+      ADMIN_EMAIL: ${ADMIN_EMAIL}
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD}
+      WEBSOCKETS_ENABLED: "true"
+      # CORS
+      CORS_ENABLED: "true"
+      CORS_ORIGIN: "http://localhost:3000"
+    volumes:
+      - ./uploads:/directus/uploads
+      - ./extensions:/directus/extensions
+    networks:
+      - cms-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.dev
+    container_name: cms_frontend
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend:/app
+      # Anonymize node_modules to avoid syncing host node_modules to container
+      - /app/node_modules
+      - /app/.next
+    environment:
+      - NEXT_PUBLIC_CMS_URL=${NEXT_PUBLIC_CMS_URL}
+    networks:
+      - cms-network
+
+volumes:
+  pgdata:
+
+networks:
+  cms-network:
