@@ -22,7 +22,7 @@ export default function RootLayout({
       lang="en"
       className={`${spaceGrotesk.variable} dark h-full antialiased font-sans`}
     >
-      <body className="min-h-full flex flex-col bg-background text-foreground">{children}</body>
+      <body suppressHydrationWarning className="min-h-full flex flex-col bg-background text-foreground">{children}</body>
     </html>
   );
 }
